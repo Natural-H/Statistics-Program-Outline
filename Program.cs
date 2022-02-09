@@ -9,13 +9,13 @@ namespace Stadistics_Program_Outline
         static void Main(string[] args)
         {
             Console.WriteLine("How many data do you have? ");
-            int[] JustData = new int[Convert.ToInt32(Console.ReadLine())];
+            decimal[] JustData = new decimal[Convert.ToInt32(Console.ReadLine())];
 
             Console.WriteLine();
             for (int i = 0; i < JustData.Length; i++)
             {
                 Console.Write($"Give me data {i + 1}: ");
-                JustData[i] = Convert.ToInt32(Console.ReadLine());
+                JustData[i] = Convert.ToDecimal(Console.ReadLine());
             }
 
             StadisticTable stadisticTable = new(JustData);
