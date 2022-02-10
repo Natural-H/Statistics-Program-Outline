@@ -82,7 +82,7 @@ namespace Stadistics_Program_Outline
                     $"\t\t{Math.Round((decimal)Classes[i].Frequency, 2)}%");
 
             Console.WriteLine("\nPress 'e' to continue...");
-            Action action = () => { };
+            Action action = null!;
             action = () =>
             {
                 ConsoleKeyInfo key = Console.ReadKey(true);
@@ -172,7 +172,7 @@ namespace Stadistics_Program_Outline
                     $"\t\t{Math.Round((decimal)Classes[i].RFrequency, 2)}%");
 
             Console.WriteLine("\nPress 'e' to continue...");
-            Action action = () => { };
+            Action action = null!;
             action = () =>
             {
                 ConsoleKeyInfo key = Console.ReadKey(true);

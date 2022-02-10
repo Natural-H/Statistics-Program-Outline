@@ -19,7 +19,7 @@ namespace Stadistics_Program_Outline
                 "\n 3 -> Decimal with 0.01 of presition" +
                 "\n\n Esc -> Close program");
 
-            Action action = () => { };     // For some reason, I need to assign de value two times.
+            Action action = null!;     // For some reason, I need to assign de value two times.
             action = () =>
             {
                 ConsoleKeyInfo key = Console.ReadKey(true);
@@ -67,7 +67,7 @@ namespace Stadistics_Program_Outline
                         IntArray[i] = Convert.ToInt32(Console.ReadLine());
                     }
 
-                    StatTable statTable = new StatTable(IntArray);
+                    StatTable statTable = new(IntArray);
                     statTable.ShowInfo();
                     break;
                 case Types.Decimal1:
@@ -80,7 +80,7 @@ namespace Stadistics_Program_Outline
                         DecArray[i] = Convert.ToDecimal(Console.ReadLine());
                     }
 
-                    DecStatTable decStatTable = new DecStatTable(DecArray);
+                    DecStatTable decStatTable = new(DecArray);
                     decStatTable.ShowInfo();
                     break;
                 case Types.Decimal2:
@@ -93,7 +93,7 @@ namespace Stadistics_Program_Outline
                         DecArray1[i] = Convert.ToDecimal(Console.ReadLine());
                     }
 
-                    DecStatTable decStatTable1 = new DecStatTable(DecArray1, 2);
+                    DecStatTable decStatTable1 = new(DecArray1, 2);
                     decStatTable1.ShowInfo();
                     break;
                 default:
