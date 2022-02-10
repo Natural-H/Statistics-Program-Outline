@@ -4,9 +4,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Statistics_Program_Outline
+namespace Stadistics_Program_Outline
 {
-    internal interface IStadisticTable
+    public interface IStadisticTable
     {
+        protected struct Class<T> where T : struct
+        {
+            public T ILimit { get; set; }
+            public T SLimit { get; set; }
+            public decimal RILimit { get; set; }
+            public decimal RSLimit { get; set; }
+            public T Mark { get; set; }
+            public uint Frequency { get; set; }
+            public decimal RFrequency { get; set; }
+        }
+
+        void AssignLimits();
+        void ShowInfo();
     }
 }
