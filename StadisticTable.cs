@@ -29,7 +29,7 @@ namespace Stadistics_Program_Outline
             {
                 Classes[i].Frequency = Count(DataArray, Classes[i].ILimit, Classes[i].SLimit);
                 Classes[i].RFrequency = Classes[i].Frequency * 100.0m / DataArray.Length;
-                Classes[i].Mark = (int)((Classes[i].ILimit + Classes[i].RILimit) / 2);
+                Classes[i].Mark = (Classes[i].ILimit + Classes[i].SLimit) / 2.0m;
             }
         }
 
@@ -64,6 +64,15 @@ namespace Stadistics_Program_Outline
             return count;
         }
 
+        bool CheckLimits()
+        {
+            foreach (var item in Classes)
+                if ((item.SLimit - item.ILimit + 1) != ClassLenght)
+                    return false;
+
+            return true;
+        }
+
         public void ShowInfo()
         {
             Console.WriteLine($"\n\nMax Value: {DataArray.Max()}\nMin Value: {DataArray.Min()}\nRange: {Range}\nClass Lenght: {ClassLenght}");
@@ -81,6 +90,7 @@ namespace Stadistics_Program_Outline
                     $"\t\t{Classes[i].Mark}\t\t{Classes[i].Frequency}" +
                     $"\t\t{Math.Round((decimal)Classes[i].Frequency, 2)}%");
 
+            Console.WriteLine(CheckLimits() ? "\nLimits Check Passed" : "\nSomething is wrong with the limits...");
             Console.WriteLine("\nPress 'e' to continue...");
             Action action = null!;
             action = () =>
@@ -118,7 +128,7 @@ namespace Stadistics_Program_Outline
             {
                 Classes[i].Frequency = Count(DataArray, Classes[i].ILimit, Classes[i].SLimit);
                 Classes[i].RFrequency = Classes[i].Frequency * 100.0m / DataArray.Length;
-                Classes[i].Mark = (Classes[i].ILimit + Classes[i].RILimit) / 2.0m;
+                Classes[i].Mark = (Classes[i].ILimit + Classes[i].SLimit) / 2.0m;
             }
         }
 
@@ -127,10 +137,10 @@ namespace Stadistics_Program_Outline
             Classes[0].ILimit = DataArray.Min();
 
             for (int i = 1; i < ClassCount; i++)
-                Classes[i].ILimit = Classes[i - 1].ILimit + ClassLenght + (1.0m / (decimal)Math.Pow(10, Decimals));
+                Classes[i].ILimit = Classes[i - 1].ILimit + ClassLenght;
 
             for (int i = 0; i < ClassCount; i++)
-                Classes[i].SLimit = Classes[i].ILimit + ClassLenght;
+                Classes[i].SLimit = Classes[i].ILimit + ClassLenght - (1.0m / (decimal)Math.Pow(10, Decimals));
 
             for (int i = 1; i < ClassCount; i++)
             {
@@ -153,13 +163,22 @@ namespace Stadistics_Program_Outline
             return count;
         }
 
+        bool CheckLimits()
+        {
+            foreach (var item in Classes)
+                if ((item.SLimit - item.ILimit + (1.0m / (decimal)Math.Pow(10, Decimals))) != ClassLenght)
+                    return false;
+
+            return true;
+        }
+
         public void ShowInfo()
         {
             Console.WriteLine($"\n\nMax Value: {DataArray.Max()}\nMin Value: {DataArray.Min()}\nRange: {Range}\nClass Lenght: {ClassLenght}");
             Console.WriteLine($"\nClass" +
                 $"\tLimits" +
                 $"\t\t\tReal Limits" +
-                $"\t\tClass Mark" +
+                $"\t\t\tClass Mark" +
                 $"\tFrequency" +
                 $"\tRelative Frequency");
 
@@ -171,6 +190,7 @@ namespace Stadistics_Program_Outline
                     $"\t\t{Classes[i].Frequency}" +
                     $"\t\t{Math.Round((decimal)Classes[i].RFrequency, 2)}%");
 
+            Console.WriteLine(CheckLimits() ? "\nLimits Check Passed" : "\nSomething is wrong with the limits...");
             Console.WriteLine("\nPress 'e' to continue...");
             Action action = null!;
             action = () =>

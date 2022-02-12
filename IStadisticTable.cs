@@ -14,7 +14,7 @@ namespace Stadistics_Program_Outline
             public T SLimit { get; set; }
             public decimal RILimit { get; set; }
             public decimal RSLimit { get; set; }
-            public T Mark { get; set; }
+            public decimal Mark { get; set; }
             public uint Frequency { get; set; }
             public decimal RFrequency { get; set; }
         }

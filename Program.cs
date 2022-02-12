@@ -19,7 +19,7 @@ namespace Stadistics_Program_Outline
                 "\n 3 -> Decimal with 0.01 of presition" +
                 "\n\n Esc -> Close program");
 
-            Action action = null!;     // For some reason, I need to assign de value two times.
+            Action action = null!;
             action = () =>
             {
                 ConsoleKeyInfo key = Console.ReadKey(true);
