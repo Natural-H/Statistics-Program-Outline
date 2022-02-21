@@ -15,6 +15,14 @@ namespace Stadistics_Program_Outline
         public decimal ClassLenght { get; }
         private readonly IStadisticTable.Class<decimal>[] Classes;
 
+        public decimal Average { get; }
+        public decimal CentralData { get; }
+        private IStadisticTable.Class<decimal> central;
+        private IStadisticTable.Class<decimal> modal;
+        public decimal Mediana { get; }
+        public decimal Moda { get; }
+        public decimal MediaArmonica { get; }
+
         public StatTable(decimal[] DataArray, uint decimals = 0)
         {
             this.DataArray = DataArray;
@@ -22,7 +30,7 @@ namespace Stadistics_Program_Outline
 
             Range = DataArray.Max() - DataArray.Min();
             ClassCount = (uint)(1 + 3.3 * Math.Log(DataArray.Length, 10));
-            ClassLenght = Math.Round((decimal)Range / ClassCount, (int)Decimals, MidpointRounding.ToPositiveInfinity);
+            ClassLenght = Math.Round(Range / ClassCount, (int)Decimals, MidpointRounding.ToPositiveInfinity);
 
             Classes = new IStadisticTable.Class<decimal>[ClassCount];
             AssignLimits();
@@ -32,7 +40,29 @@ namespace Stadistics_Program_Outline
                 Classes[i].Frequency = Count(DataArray, Classes[i].ILimit, Classes[i].SLimit);
                 Classes[i].RFrequency = Classes[i].Frequency * 100.0m / DataArray.Length;
                 Classes[i].Mark = (Classes[i].ILimit + Classes[i].SLimit) / 2.0m;
+                Average += Classes[i].Frequency * Classes[i].Mark;
             }
+
+            Average /= DataArray.Length;
+            CentralData = DataArray.Length / 2.0m;
+            central = Classes[AcummIndexOf(CentralData)];
+            Mediana = central.RILimit + ((DataArray.Length / 2.0m) - SumFrequencyUppon(AcummIndexOf(CentralData) - 1)) / central.Frequency * ClassLenght;
+
+            modal = Classes[GetMaxFreqIndex()];
+            decimal A1 = modal.Frequency - Classes[GetMaxFreqIndex() - 1].Frequency;
+            decimal A2 = modal.Frequency - Classes[GetMaxFreqIndex() + 1].Frequency;
+            Moda = modal.RILimit + A1 / (A1 + A2) * ClassLenght;
+            MediaArmonica = GetMediaArmonica((int)ClassCount - 1);
+        }
+
+        decimal SumFrequencyUppon(int count, decimal buffer = 0)
+        {
+            return count < 0 ? buffer : SumFrequencyUppon(count - 1, Classes[count].Frequency + buffer);
+        }
+
+        decimal GetMediaArmonica(int count, decimal buffer = 0)
+        {
+            return count < 0 ? DataArray.Length / buffer : GetMediaArmonica(count - 1, (Classes[count].Frequency / Classes[count].Mark) + buffer);
         }
 
         public void AssignLimits()
@@ -53,6 +83,8 @@ namespace Stadistics_Program_Outline
 
             Classes[0].RILimit = Classes[0].RSLimit - ClassLenght;
             Classes[ClassCount - 1].RSLimit = Classes[ClassCount - 1].RILimit + ClassLenght;
+
+            
         }
 
         static uint Count(decimal[] array, decimal MinRange, decimal MaxRange)
@@ -64,6 +96,40 @@ namespace Stadistics_Program_Outline
                     count++;
 
             return count;
+        }
+
+        int AcummIndexOf(decimal value)
+        {
+            decimal temp = 0;
+
+            for (int i = 0; i < Classes.Length; i++)
+            {
+                temp += Classes[i].Frequency;
+                if (temp >= value)
+                    return i;
+            }
+
+            return 0;
+        }
+
+        uint IndexOf(uint value)
+        {
+            for (uint i = 0; i < Classes.Length; i++)
+                if (Classes[i].Frequency == value)
+                    return i;
+
+            return 0;
+        }
+
+        uint GetMaxFreqIndex()
+        {
+            uint temp = 0;
+
+            foreach (var item in Classes)
+                if (item.Frequency >= temp)
+                    temp = item.Frequency;
+
+            return IndexOf(temp);
         }
 
         bool CheckLimits()
@@ -91,9 +157,19 @@ namespace Stadistics_Program_Outline
                     $"\t\t{Classes[i].RILimit} - {Classes[i].RSLimit}" +
                     $"\t\t{Classes[i].Mark}" +
                     $"\t\t{Classes[i].Frequency}" +
-                    $"\t\t{Math.Round((decimal)Classes[i].RFrequency, 2)}%");
+                    $"\t\t{Math.Round(Classes[i].RFrequency, 2)}%");
 
-            Console.WriteLine(CheckLimits() ? "\nLimits Check Passed" : "\nSomething is wrong with the limits...");
+            Console.WriteLine(CheckLimits() ? "\nLimits Check Passed" : "\nSomething is wrong with the limits... Did you select the correct mode?");
+
+            Console.WriteLine($"\n\nCentralization measures:" +
+                $"\nCentral Class: {AcummIndexOf(CentralData) + 1}" +
+                $"\nModal Class: {GetMaxFreqIndex() + 1}" +
+                $"\nCentral Data: {CentralData}" +
+                $"\n\nAverage: {Math.Round(Average, 2)}" +
+                $"\nMediana: {Mediana}" +
+                $"\nModa: {Moda}" +
+                $"\nGeometric Mid: Pending..." +
+                $"\nArmonic Mid: {Math.Round(MediaArmonica, 2)}");
 
             Console.WriteLine("\nPress 'e' to continue...");
             Action action = null!;
