@@ -58,7 +58,7 @@ namespace Stadistics_Program_Outline
             switch (type)
             {
                 case Types.Int:
-                    int[] IntArray = new int[Convert.ToInt32(Console.ReadLine())];
+                    decimal[] IntArray = new decimal[Convert.ToInt32(Console.ReadLine())];
 
                     Console.WriteLine();
                     for (int i = 0; i < IntArray.Length; i++)
@@ -80,7 +80,7 @@ namespace Stadistics_Program_Outline
                         DecArray[i] = Convert.ToDecimal(Console.ReadLine());
                     }
 
-                    DecStatTable decStatTable = new(DecArray);
+                    StatTable decStatTable = new(DecArray, 1);
                     decStatTable.ShowInfo();
                     break;
                 case Types.Decimal2:
@@ -93,7 +93,7 @@ namespace Stadistics_Program_Outline
                         DecArray1[i] = Convert.ToDecimal(Console.ReadLine());
                     }
 
-                    DecStatTable decStatTable1 = new(DecArray1, 2);
+                    StatTable decStatTable1 = new(DecArray1, 2);
                     decStatTable1.ShowInfo();
                     break;
                 default:
